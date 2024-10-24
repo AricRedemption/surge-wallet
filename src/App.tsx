@@ -22,6 +22,8 @@ import Test from "./pages/Test/Index"
 import Account from "./pages/Account/Index"
 import SendToken from "./pages/transactions/SendToken.tsx"
 import { useContext } from "react"
+import { Staking } from "./pages/Babylon/index.tsx"
+import { ErrorProvider } from "./context/Error/ErrorContext";
 
 function App() {
   const { current } = useContext(RouterLogContext)
@@ -46,6 +48,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/test" element={<Test />} />
+            <Route path="/staking" element={<ErrorProvider><Staking /></ErrorProvider>} />
             <Route
               path="/accounts"
               element={
