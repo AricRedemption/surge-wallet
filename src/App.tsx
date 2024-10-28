@@ -22,6 +22,7 @@ import Test from "./pages/Test/Index"
 import Account from "./pages/Account/Index"
 import SendToken from "./pages/transactions/SendToken.tsx"
 import { useContext } from "react"
+import { Staking } from "./pages/Staking/index.tsx"
 
 function App() {
   const { current } = useContext(RouterLogContext)
@@ -46,6 +47,15 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/test" element={<Test />} />
+            <Route
+              path="/staking"
+              element={
+                <div>
+                  <Header haveSidebar={true} />
+                  <Staking />
+                </div>
+              }
+            />
             <Route
               path="/accounts"
               element={
