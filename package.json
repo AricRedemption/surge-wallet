@@ -12,6 +12,7 @@
     "format": "prettier '**/*.{ts,tsx,css,scss,json,yaml}' --write --ignore-path .gitignore"
   },
   "dependencies": {
+    "@bitcoin-js/tiny-secp256k1-asmjs": "^2.2.3",
     "@bitcoinerlab/secp256k1": "^1.1.1",
     "@hookform/resolvers": "^3.9.0",
     "@metalet/utxo-wallet-sdk": "^0.5.43",
@@ -27,6 +28,7 @@
     "clsx": "^2.1.1",
     "daisyui": "^4.12.10",
     "decimal.js": "^10.4.3",
+    "ecpair": "3.0.0-rc.0",
     "hydrogen-js-sdk": "^2.5.2",
     "lucide-react": "^0.453.0",
     "react": "^18.3.1",
