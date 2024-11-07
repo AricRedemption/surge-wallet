@@ -43,6 +43,11 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-responsive-modal": "^6.4.2",
     "react-router-dom": "^6.23.1",
+    "react-tooltip": "^5.28.0",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7",
+    "url-safe-base64": "^1.3.0",
+    "usehooks-ts": "^3.1.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
