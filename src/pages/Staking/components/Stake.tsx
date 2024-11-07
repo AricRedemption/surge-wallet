@@ -3,31 +3,48 @@ import _btc from "@/assets/svg/bitcoin.svg";
 import { Input } from "@/components/ui/input"
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Decimal from "decimal.js";
-const multiSigAddress='bc1qckg80zxgk2jm5gqlxnj54c2zfxc95tqfvvrvc9'
+import { getFinalityProviders } from "@/queries/staking";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+const multiSigAddress = 'bc1qckg80zxgk2jm5gqlxnj54c2zfxc95tqfvvrvc9'
 export default function Stake() {
     const [bal, setBal] = useState("0.000")
-    const [stake, setStake] = useState("0.000")
+    const [stake, setStake] = useState("0.000");
+    const [fps, setFps] = useState([]);
+    const _getFps = useCallback(async () => {
+        const res = await getFinalityProviders();
+        console.log(res)
+        setFps(res.data)
+    }, [])
     const _getBal = useCallback(async () => {
         const res = await window.unisat.getBalance();
         console.log(res)
-        setBal((res.total/1e8).toFixed(8))
+        setBal((res.total / 1e8).toFixed(8))
     }, [])
     useEffect(() => {
-        _getBal()
-    }, [_getBal])
+        _getBal();
+        _getFps();
+    }, [_getBal, _getFps])
 
-    const handleStake = async ()=>{
-        try{
-            let accounts = await window.unisat.requestAccounts();
-        }catch(e){
+    const handleStake = async () => {
+        try {
+            const accounts = await window.unisat.requestAccounts();
+        } catch (e) {
             console.log(e)
             console.log('connect failed');
             return
         }
         // 1 staking to babylon
         // 2 transfer btc to multisig address
-        
-        const res = await window.unisat.sendBitcoin(multiSigAddress,new Decimal(stake).mul(1e8).toNumber())
+
+        const res = await window.unisat.sendBitcoin(multiSigAddress, new Decimal(stake).mul(1e8).toNumber())
         console.log(res)
     }
     return <div>
@@ -35,10 +52,38 @@ export default function Stake() {
             <div className="flex-1">
                 <div className="flex items-center justify-between ">
                     <div className="text-sm">
+                        Select a finality provider
+                    </div>
+                    <div className="text-sm">
+
+                    </div>
+                </div>
+                <div className="mt-4 flex border-slate-400 rounded-sm  px-3 gap-2">
+
+
+                    <Select>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a finality provider" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                {fps.map((fp) => {
+                                    return <SelectItem key={fp.btc_pk} value={fp.btc_pk}>{fp.description.moniker}</SelectItem>
+                                }
+                                )}
+
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <div className="flex-1">
+                <div className="flex items-center justify-between ">
+                    <div className="text-sm">
                         You Will Stake
                     </div>
                     <div className="text-sm">
-                        Balance: <span className="text-[#12FF80] cursor-pointer " onClick={()=>{
+                        Balance: <span className="text-[#12FF80] cursor-pointer " onClick={() => {
                             setStake(bal)
                         }}>{bal}</span> BTC
                     </div>
