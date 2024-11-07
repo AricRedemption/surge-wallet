@@ -45,10 +45,13 @@ export const FinalityProvider: React.FC<FinalityProviderProps> = ({
     <div
       className={`
         ${generalStyles}
-        ${selected ? "bordered" : ""}
+        ${selected ? "border border-[#12FF80]" : ""}
         ${finalityProviderHasData ? "" : "opacity-50 pointer-events-none"}
         `}
       onClick={handleClick}
+      style={{
+        border: selected ? "1px solid #12FF80" : "",
+      }}
     >
       <div className="grid grid-cols-stakingFinalityProvidersMobile grid-rows-2 items-center gap-2 lg:grid-cols-4 lg:grid-rows-1">
         <div>

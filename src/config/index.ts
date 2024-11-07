@@ -18,3 +18,7 @@ export const getNetworkAppUrl = (): string => {
 export const shouldDisplayPoints = (): boolean => {
   return !!import.meta.env.VITE_PUBLIC_POINTS_API_URL;
 };
+
+export const network = import.meta.env.VITE_NETWORK||'mainnet'
+export const IS_DEV = import.meta.env.MODE === "development"
+export const GAS_BUDGET = import.meta.env.VITE_GAS_BUDGET

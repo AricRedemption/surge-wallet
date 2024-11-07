@@ -19,4 +19,13 @@ export default defineConfig({
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://test-app.nemoprotocol.com/api",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

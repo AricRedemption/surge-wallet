@@ -48,6 +48,7 @@ import geoRestricted from "./Form/States/geo-restricted.svg";
 import stakingCapReached from "./Form/States/staking-cap-reached.svg";
 import stakingNotStarted from "./Form/States/staking-not-started.svg";
 import stakingUpgrading from "./Form/States/staking-upgrading.svg";
+import Stake from '../StakingForm/components/Stake'
 
 interface OverflowProperties {
   isHeightCap: boolean;
@@ -685,7 +686,8 @@ export const Staking: React.FC<StakingProps> = ({
         </div>
         <div className="divider m-0 lg:divider-horizontal lg:m-0" />
         <div className="flex flex-1 flex-col gap-4 lg:basis-2/5 xl:basis-1/3">
-          {renderStakingForm()}
+          {/* {renderStakingForm()} */}
+          <Stake />
         </div>
       </div>
       <FeedbackModal

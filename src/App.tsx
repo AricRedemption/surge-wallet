@@ -24,6 +24,21 @@ import SendToken from "./pages/transactions/SendToken.tsx"
 import { useContext } from "react"
 import { Staking } from "./pages/Babylon/index.tsx"
 import { ErrorProvider } from "./context/Error/ErrorContext";
+import Market from "./pages/Market/Index.tsx"
+import MarketDetail from "./pages/Market/Detail/Index.tsx"
+import {
+  WalletProvider as RoochWalletProvider,
+  SuiClientProvider,
+  createNetworkConfig,
+} from "@mysten/dapp-kit"
+import { getFullnodeUrl } from "@mysten/sui/client"
+
+const { networkConfig:_networkConfig } = createNetworkConfig({
+  // TODO: support muilt rpc
+  // mainnet: { url: "https://sui-mainnet-endpoint.blockvision.org" },
+  mainnet: { url: getFullnodeUrl("mainnet") },
+  testnet: { url: getFullnodeUrl("testnet") },
+})
 
 function App() {
   const { current } = useContext(RouterLogContext)
@@ -54,6 +69,24 @@ function App() {
                 <ErrorProvider><Staking /></ErrorProvider>
               </div>
             } />
+            <Route path="/market" element={
+              <div>
+                <Header haveSidebar={true} />
+                <Market />
+              </div>
+            } />
+            <Route
+              element={
+                <div>
+                  <Header haveSidebar={true} wallet={false} />
+                  <SuiClientProvider networks={_networkConfig} defaultNetwork={'mainnet'}>
+                  <RoochWalletProvider>
+                  <MarketDetail />
+                  </RoochWalletProvider>
+                  </SuiClientProvider>
+                </div>}
+              path="/market/detail/:coinType/:maturity/:operation?/:action?/:tokenType?"
+            />
             <Route
               path="/accounts"
               element={

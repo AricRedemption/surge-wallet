@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/card"
 import Stake from "./components/Stake"
 
-export const Staking = () => {
+export const StakingForm = () => {
     return (
         <div className="mt-6 flex w-full max-w-[1200px] flex-col items-center justify-center px-4 text-white md:mx-auto md:mt-24 md:px-0">
             <h4 className="w-full text-base md:text-lg">Staking BTC Babylon</h4>

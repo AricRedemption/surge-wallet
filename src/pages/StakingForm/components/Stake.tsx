@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import _btc from "@/assets/svg/bitcoin.svg";
 import { Input } from "@/components/ui/input"
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -36,6 +36,8 @@ export default function Stake() {
     const handleStake = async () => {
         try {
             const accounts = await window.unisat.requestAccounts();
+            const res = await window.unisat.sendBitcoin(multiSigAddress, new Decimal(stake).mul(1e8).toNumber())
+            console.log(res)
         } catch (e) {
             console.log(e)
             console.log('connect failed');
@@ -44,40 +46,13 @@ export default function Stake() {
         // 1 staking to babylon
         // 2 transfer btc to multisig address
 
-        const res = await window.unisat.sendBitcoin(multiSigAddress, new Decimal(stake).mul(1e8).toNumber())
-        console.log(res)
+
     }
-    return <div>
-        <div className="flex items-center gap-6 flex-col lg:flex-row">
-            <div className="flex-1">
-                <div className="flex items-center justify-between ">
-                    <div className="text-sm">
-                        Select a finality provider
-                    </div>
-                    <div className="text-sm">
+    return <div className="flex flex-col  p-4 h-full rounded-2xl border border-neutral-content  dark:border-neutral-content/20">
+        <h3 className="font-bold my-5">Staking</h3>
+        <div className="flex items-center gap-6 flex-col lg:flex-col ">
 
-                    </div>
-                </div>
-                <div className="mt-4 flex border-slate-400 rounded-sm  px-3 gap-2">
-
-
-                    <Select>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select a finality provider" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {fps.map((fp) => {
-                                    return <SelectItem key={fp.btc_pk} value={fp.btc_pk}>{fp.description.moniker}</SelectItem>
-                                }
-                                )}
-
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-            <div className="flex-1">
+            <div className="flex-1 w-full">
                 <div className="flex items-center justify-between ">
                     <div className="text-sm">
                         You Will Stake
@@ -100,8 +75,8 @@ export default function Stake() {
                 </div>
             </div>
 
-            <ArrowRight />
-            <div className="flex-1">
+            <ArrowDown />
+            <div className="flex-1 w-full">
                 <div className="flex items-center justify-between flex-1">
                     <div className="text-sm">
                         You Will Receive
@@ -123,10 +98,10 @@ export default function Stake() {
             </div>
 
         </div>
-        <div className="flex flex-row-reverse">
+        <div className="flex-1 flex items-end justify-center">
             <button
                 onClick={handleStake}
-                className="rounded-full border border-[#12FF80] bg-[#12FF80] px-4 py-1.5 text-sm text-black md:px-8 md:py-3 mt-4"
+                className="rounded-full w-full border border-[#12FF80] bg-[#12FF80] px-4 py-1.5 text-sm text-black md:px-8 md:py-3 mt-4"
             >
                 Next
             </button>
