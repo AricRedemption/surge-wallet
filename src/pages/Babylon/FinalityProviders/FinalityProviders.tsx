@@ -103,12 +103,12 @@ export const FinalityProviders: React.FC<FinalityProvidersProps> = ({
   return (
     <>
       <p>
-        <strong>Step-1:</strong> Select a finality provider
+         Select a finality provider
       </p>
       <div className="flex gap-3">
         <FinalityProviderSearch onSearch={handleSearch} />
       </div>
-      <div className="hidden gap-2 px-4 lg:grid lg:grid-cols-stakingFinalityProvidersDesktop">
+      <div className="hidden gap-2 px-4 lg:grid lg:grid-cols-4">
         <p>Finality Provider</p>
         <p>BTC PK</p>
         <p>Total Delegation</p>

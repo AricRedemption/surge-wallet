@@ -19,6 +19,7 @@
     "@roochnetwork/rooch-sdk-kit": "^0.2.1",
     "@tanstack/react-query": "5.0.0",
     "@uidotdev/usehooks": "^2.4.1",
+    "axios": "^1.7.7",
     "bitcoinjs-lib": "^6.1.6",
     "classnames": "^2.5.1",
     "daisyui": "^4.12.10",

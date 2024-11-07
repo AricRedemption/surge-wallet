@@ -530,9 +530,9 @@ export const Staking: React.FC<StakingProps> = ({
       );
     }
     // Wallet is not connected
-    else if (!isWalletConnected) {
-      return <WalletNotConnected onConnect={onConnect} />;
-    }
+    // else if (!isWalletConnected) {
+    //   return <WalletNotConnected onConnect={onConnect} />;
+    // }
     // Wallet is connected but we are still loading the staking params
     else if (isLoading) {
       return <LoadingView />;
@@ -673,7 +673,7 @@ export const Staking: React.FC<StakingProps> = ({
   };
 
   return (
-    <div className="card flex flex-col gap-2 bg-base-300 p-4 shadow-sm lg:flex-1 text-white">
+    <div className="card flex flex-col gap-2 bg-base-300 p-4 shadow-sm lg:flex-1 text-white xl:mx-auto xl:max-w-[1200px]">
       <h3 className="mb-4 font-bold">Staking</h3>
       <div className="flex flex-col gap-4 lg:flex-row">
         <div className="flex flex-1 flex-col gap-4 lg:basis-3/5 xl:basis-2/3">

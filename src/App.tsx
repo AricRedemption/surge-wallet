@@ -48,7 +48,12 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/staking" element={<ErrorProvider><Staking /></ErrorProvider>} />
+            <Route path="/staking" element={
+              <div>
+                <Header haveSidebar={true} />
+                <ErrorProvider><Staking /></ErrorProvider>
+              </div>
+            } />
             <Route
               path="/accounts"
               element={

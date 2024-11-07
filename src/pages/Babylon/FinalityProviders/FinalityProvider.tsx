@@ -45,12 +45,12 @@ export const FinalityProvider: React.FC<FinalityProviderProps> = ({
     <div
       className={`
         ${generalStyles}
-        ${selected ? "fp-selected" : ""}
+        ${selected ? "bordered" : ""}
         ${finalityProviderHasData ? "" : "opacity-50 pointer-events-none"}
         `}
       onClick={handleClick}
     >
-      <div className="grid grid-cols-stakingFinalityProvidersMobile grid-rows-2 items-center gap-2 lg:grid-cols-stakingFinalityProvidersDesktop lg:grid-rows-1">
+      <div className="grid grid-cols-stakingFinalityProvidersMobile grid-rows-2 items-center gap-2 lg:grid-cols-4 lg:grid-rows-1">
         <div>
           {finalityProviderHasData ? (
             <div className="flex items-center gap-1 justify-start">
