@@ -14,17 +14,16 @@ async function getCoinInfoList(name = "", address = "") {
     name,
     address,
   })
-  console.log(ret,'surgeApi')
-  return ret.slice(0,2).map(item=>{
+  console.log(ret, "surgeApi")
+  return ret.slice(0, 2).map((item) => {
     return {
       ...item,
-      coinName:'sBTC',
-      coinLogo:_btc,
-      provider:'Surge',
-      providerLogo:_logo
+      coinName: "sBTC",
+      coinLogo: _btc,
+      provider: "Surge",
+      providerLogo: _logo,
     }
   })
-
 }
 
 function getFixedReturnInfos() {
@@ -38,25 +37,25 @@ export function useQueryFixedReturnInfos() {
   })
 }
 
-async function getCoinConfig(coinType: string, maturity: string, address?: string) {
-  const headers = new Headers()
-  if (address) {
-    headers.set("userAddress", address)
-  }
-  const ret =await surgeApi<CoinConfig>("/api/v1/market/config/detail").get(
+async function getCoinConfig(coinType: string, maturity: string) {
+  // const headers = new Headers()
+  // if (address) {
+  //   headers.set("userAddress", address)
+  // }
+  const ret = await surgeApi<CoinConfig>("/api/v1/market/config/detail").get(
     {
       coinType,
       maturity,
     },
-    headers,
+    // headers,
   )
-  console.log(ret,'surgeApi')
+  console.log(ret, "surgeApi")
   return {
     ...ret,
-    coinName:'sBTC',
-    coinLogo:_btc,
-    provider:'Surge',
-    providerLogo:_logo
+    coinName: "sBTC",
+    coinLogo: _btc,
+    provider: "Surge",
+    providerLogo: _logo,
   }
 }
 
