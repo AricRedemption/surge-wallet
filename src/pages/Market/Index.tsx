@@ -3,14 +3,10 @@ import Decimal from "decimal.js"
 
 import { useCoinInfoList } from "@/queries"
 import PieChart from "./components/PieChart.tsx"
-import { Link, useNavigate } from "react-router-dom"
-import Star from "@/assets/images/svg/market/star.svg"
-import Crown from "@/assets/images/svg/market/crown.svg"
+import { useNavigate } from "react-router-dom"
 // import StarIcon from "@/assets/images/svg/star.svg?react"
-import Diamond from "@/assets/images/svg/market/diamond.svg"
 import Logo from "@/assets/images/svg/market/logo.svg?react"
 import "@mysten/dapp-kit/dist/index.css"
-
 
 export default function Market() {
   const navigate = useNavigate()
@@ -18,48 +14,19 @@ export default function Market() {
 
   return (
     <>
-
-      <div className="py-10 relative xl:mx-auto xl:max-w-[1200px]">
+      <div className="relative py-10 xl:mx-auto xl:max-w-[1200px]">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-[28px] text-white">Market</h3>
-            <h6 className="text-white mt-8">
-              Dive into the yield trading market and maximize your profit
-              potential.
-            </h6>
-            <p className="text-white">
-              Learn More&nbsp;&nbsp;
-              <Link
-                to="/learn"
-                className="underline text-white underline-offset-2"
-              >
-                About PT & YT Trading
-              </Link>
-            </p>
-            <div className="flex items-center gap-x-2 mt-9">
-              <button className="border border-[#0052F2] bg-[#0052F2]/25 text-[#5D94FF] py-1.5 px-3 rounded-full flex items-center gap-x-1">
-                <img src={Diamond} alt="" />
-                <span className="text-xs">All</span>
-              </button>
-              <button className="border border-[#C2B166] bg-[#C2B166]/25 text-[#C2B166] py-1.5 px-3 rounded-full flex items-center gap-x-1">
-                <img src={Star} alt="" /> <span className="text-xs">New</span>
-              </button>
-              <button className="border border-[#2DF4DD] bg-[#2DF4DD]/25 text-[#2DF4DD] py-1.5 px-3 rounded-full flex items-center gap-x-1">
-                <img src={Crown} alt="" className="inline-block" />
-                <span className="text-xs">Popular</span>
-              </button>
-            </div>
-          </div>
+          <h3 className="text-[28px] text-white">Market</h3>
           <Logo />
         </div>
-        <div className="mt-[23px] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 transition-all duration-1000 ease-in-out">
+        <div className="mt-[23px] grid grid-cols-1 gap-5 transition-all duration-1000 ease-in-out md:grid-cols-2 xl:grid-cols-3">
           {list?.map((item) => (
             <div
               key={item.coinAddress + "_" + item.maturity}
-              className="p-5 rounded-[21.544px] bg-[#0E0F16]"
+              className="rounded-[21.544px] bg-[#0E0F16] p-5"
             >
               <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-y-2.5 items-start">
+                <div className="flex flex-col items-start gap-y-2.5">
                   <div className="flex items-center gap-x-2">
                     <h6 className="text-white">{item.coinName}</h6>
                     {/* <StarIcon />
@@ -67,39 +34,37 @@ export default function Market() {
                       Info
                     </div> */}
                   </div>
-                  <div className="rounded-full bg-[#1A1B27] py-1 px-2 flex items-center gap-x-2">
+                  <div className="flex items-center gap-x-2 rounded-full bg-[#1A1B27] px-2 py-1">
                     <img
                       alt="scallop"
-                      className="size-4 block"
+                      className="block size-4"
                       src={item.providerLogo}
                     />
                     <span className="text-xs">{item.provider}</span>
                   </div>
                 </div>
-                <div className=" relative ">
+                <div className="relative">
                   <img
                     src={item.coinLogo}
                     alt={item.coinName}
                     className="size-14"
                   />
                   <img
-                      alt="scallop"
-                      className="size-4 block absolute -bottom-1 -right-1"
-                      src={item.providerLogo}
-                    />
+                    alt="scallop"
+                    className="absolute -bottom-1 -right-1 block size-4"
+                    src={item.providerLogo}
+                  />
                 </div>
-
-
               </div>
               <div className="mt-6 space-y-2">
                 <div className="flex items-center justify-between">
-                  <h6 className="text-[#576682] text-xs">Maturity</h6>
+                  <h6 className="text-xs text-[#576682]">Maturity</h6>
                   {item.maturity && (
-                    <div className="text-xs text-white shrink-0">
+                    <div className="shrink-0 text-xs text-white">
                       <span className="font-bold">
                         {dayjs(parseInt(item.maturity)).format("DD MMM YYYY")}
                       </span>
-                      <span className="text-[#576682] ml-2">
+                      <span className="ml-2 text-[#576682]">
                         {dayjs(parseInt(item.maturity)).diff(dayjs(), "day")}
                         &nbsp; DAYS
                       </span>
@@ -107,9 +72,9 @@ export default function Market() {
                   )}
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[#576682] text-xs">TVL</span>
+                  <span className="text-xs text-[#576682]">TVL</span>
                   <div className="flex items-center gap-x-2">
-                    <span className="text-white text-xs font-bold">
+                    <span className="text-xs font-bold text-white">
                       ${item.tvl.toLocaleString()}
                     </span>
                     <PieChart
@@ -120,20 +85,20 @@ export default function Market() {
                     />
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between rounded-xl p-4 bg-[#131520]">
+                <div className="mt-6 flex items-center justify-between rounded-xl bg-[#131520] p-4">
                   <div className="flex flex-col gap-y-1">
-                    <div className="text-white mt-1 text-center">
+                    <div className="mt-1 text-center text-white">
                       ${item.underlyingPrice.toLocaleString()}
                     </div>
-                    <div className="text-[#576682] text-xs text-center">
+                    <div className="text-center text-xs text-[#576682]">
                       Underlying Price
                     </div>
                   </div>
                   <div className="flex flex-col gap-y-1">
-                    <div className="text-white mt-1 text-center">
+                    <div className="mt-1 text-center text-white">
                       {new Decimal(item.underlyingApy).mul(100).toFixed(2)}%
                     </div>
-                    <div className="text-[#576682] text-xs text-center">
+                    <div className="text-center text-xs text-[#576682]">
                       Underlying Apy
                     </div>
                   </div>
@@ -141,16 +106,16 @@ export default function Market() {
               </div>
               <div className="mt-3.5">
                 <h6 className="text-xs text-white">Trade</h6>
-                <div className="grid grid-cols-2 gap-x-4 mt-2.5">
+                <div className="mt-2.5 grid grid-cols-2 gap-x-4">
                   <div
-                    className="px-2 py-1.5 bg-[#2CA94F] rounded-xl flex items-center justify-between pl-5 pr-3 h-14 cursor-pointer border border-transparent hover:border-white"
+                    className="flex h-14 cursor-pointer items-center justify-between rounded-xl border border-transparent bg-[#2CA94F] px-2 py-1.5 pl-5 pr-3 hover:border-white"
                     onClick={() =>
                       navigate(
                         `/market/detail/${item.coinAddress}/${item.maturity}/swap/buy/yt`,
                       )
                     }
                   >
-                    <span className="text-white text-sm">YT</span>
+                    <span className="text-sm text-white">YT</span>
                     <div className="flex flex-col items-end">
                       <span className="text-base text-white">
                         {new Decimal(item.ytApy).toFixed(2)}%
@@ -161,7 +126,7 @@ export default function Market() {
                     </div>
                   </div>
                   <div
-                    className="px-4 py-3 bg-[#2DF5DD] rounded-xl flex items-center justify-between text-black pl-5 pr-3 h-14 cursor-pointer border border-transparent hover:border-white"
+                    className="flex h-14 cursor-pointer items-center justify-between rounded-xl border border-transparent bg-gray-300 px-4 py-3 pl-5 pr-3 text-black hover:border-white"
                     onClick={() =>
                       navigate(
                         `/market/detail/${item.coinAddress}/${item.maturity}/swap/buy/pt`,
@@ -183,7 +148,7 @@ export default function Market() {
               <div className="mt-3.5">
                 <h6 className="text-xs">Earn</h6>
                 <button
-                  className="mt-2.5 py-3 pl-7 pr-4.5 flex items-center justify-between text-sm bg-[#2CA94F] w-full text-black h-14 rounded-xl cursor-pointer border border-transparent hover:border-white"
+                  className="mt-2.5 flex h-14 w-full cursor-pointer items-center justify-between rounded-xl border border-transparent bg-[#e9983d] px-4 py-3 text-sm text-black hover:border-white"
                   onClick={() =>
                     navigate(
                       `/market/detail/${item.coinAddress}/${item.maturity}/liquidity`,

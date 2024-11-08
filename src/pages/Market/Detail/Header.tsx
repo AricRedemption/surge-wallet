@@ -1,10 +1,10 @@
 import { IS_DEV } from "@/config"
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
 import { truncateStr } from "@/lib/utils"
 import { ChevronDown } from "lucide-react"
 import { useToast } from "@/components/Toast"
 import { useEffect, useRef, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
 
 import Squares2X2Icon from "@/assets/images/svg/squares-2x2.svg?react"
 import {
@@ -18,7 +18,6 @@ import {
 
 export default function Header() {
   const toast = useToast()
-  const location = useLocation()
   const accounts = useAccounts()
   const [open, setOpen] = useState(false)
   const currentAccount = useCurrentAccount()
@@ -48,26 +47,26 @@ export default function Header() {
 
   return (
     <header className="py-6">
-      <div className=" w-full mx-auto flex items-center justify-between text-xs">
+      <div className="mx-auto flex w-full items-center justify-between text-xs">
         <div className="flex items-center gap-x-6">
           <Squares2X2Icon
-            className="md:hidden text-white cursor-pointer"
+            className="cursor-pointer text-white md:hidden"
             onClick={() => setIsOpen((isOpen) => !isOpen)}
           />
-         
+
           {isConnected ? (
-            <div className="relative" ref={subNavRef}>
+            <div className="fixed right-12 top-5" ref={subNavRef}>
               <div
                 onClick={() => setIsDrop((isDrop) => !isDrop)}
-                className="flex items-center gap-x-1 bg-[#0E0F16] px-3 py-2 rounded-full cursor-pointer"
+                className="flex cursor-pointer items-center gap-x-1 rounded-full bg-[#0E0F16] px-3 py-2"
               >
                 <span>{truncateStr(currentAccount?.address || "", 4)}</span>
                 <ChevronDown className="size-4" />
               </div>
               {isDrop && (
-                <ul className="absolute rounded-lg w-40 right-0 mt-1 overflow-hidden z-10">
+                <ul className="absolute right-0 z-10 mt-1 w-40 overflow-hidden rounded-lg">
                   <li
-                    className="cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white w-full"
+                    className="w-full cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white"
                     onClick={() => {
                       disconnect()
                     }}
@@ -75,7 +74,7 @@ export default function Header() {
                     Disconnect
                   </li>
                   <li
-                    className="cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white w-full"
+                    className="w-full cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white"
                     onClick={() => {
                       navigator.clipboard.writeText(
                         currentAccount?.address || "",
@@ -93,7 +92,7 @@ export default function Header() {
                     .map((account) => (
                       <li
                         key={account.address}
-                        className="cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white w-full"
+                        className="w-full cursor-pointer bg-[#0E0F16] px-4 py-2 text-white/50 hover:text-white"
                         onClick={() => {
                           switchAccount(
                             { account },
@@ -117,7 +116,7 @@ export default function Header() {
               trigger={
                 <button
                   disabled={!!currentAccount}
-                  className="text-white outline-none py-2 px-3 rounded-3xl bg-[#0052F2]"
+                  className="fixed right-12 top-5 rounded-3xl border border-white px-3 py-2 text-white outline-none"
                 >
                   Connect Wallet
                 </button>
@@ -137,7 +136,7 @@ export default function Header() {
           <Link to="/market" className="py-2 text-white">
             Markets
           </Link>
-          <Link to="/portfolio" className="py-2 cursor-pointer text-white">
+          <Link to="/portfolio" className="cursor-pointer py-2 text-white">
             Portfolio
           </Link>
           <Link to="/learn" className="py-2 text-white">
