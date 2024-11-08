@@ -111,17 +111,17 @@ interface LPResult {
 
 async function getLPRatio(
   marketStateId: string,
-  address: string,
+  // address: string,
   mintType?: string,
 ) {
-  const headers = new Headers()
-  headers.set("userAddress", address)
+  // const headers = new Headers()
+  // headers.set("userAddress", address)
   return await surgeApi<LPResult>("/api/v1/market/lp/mintConfig").get(
     {
       marketStateId,
       mintType,
     },
-    headers,
+    // headers,
   )
 }
 
@@ -148,15 +148,11 @@ export function useQuerySwapRatio(marketStateId?: string, tokenType?: string) {
   })
 }
 
-export function useQueryLPRatio(
-  address?: string,
-  marketStateId?: string,
-  mintType?: string,
-) {
+export function useQueryLPRatio(marketStateId?: string, mintType?: string) {
   return useQuery({
     // FIXME： queryKey dose not work
     queryKey: ["lpRatio", marketStateId, mintType],
-    queryFn: () => getLPRatio(marketStateId!, address!, mintType),
+    queryFn: () => getLPRatio(marketStateId!, mintType),
     enabled: !!marketStateId,
     refetchInterval: 1000 * 30,
   })
@@ -171,7 +167,7 @@ export function useCoinConfig(
     enabled: !!coinType && !!maturity,
     // FIXME： queryKey dose not work
     queryKey: ["coinConfig", coinType, maturity, address],
-    queryFn: () => getCoinConfig(coinType!, maturity!, address),
+    queryFn: () => getCoinConfig(coinType!, maturity!),
   })
 }
 

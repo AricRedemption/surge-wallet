@@ -1,4 +1,4 @@
-const baseUrl = 'https://test-app.nemoprotocol.com'
+const baseUrl = 'http://test-app.nemoprotocol.com'
 
 type OptionParams = Record<string, string | number | undefined>
 
