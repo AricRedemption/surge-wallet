@@ -6,6 +6,11 @@ import { networkConfig } from "./utils/networks";
 import { ToastProvider } from "@/components/Toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoochProvider, WalletProvider } from "@roochnetwork/rooch-sdk-kit";
+import {
+  WalletProvider as RoochWalletProvider,
+  SuiClientProvider,
+  createNetworkConfig,
+} from "@mysten/dapp-kit"
 
 import "./index.css";
 

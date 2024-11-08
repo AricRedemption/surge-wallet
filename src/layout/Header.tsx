@@ -1,14 +1,15 @@
 import noteIcon from "/assets/icons/note.svg"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Logo from "@/assets/svg/Logo.svg?react"
 import LogoWithText from "@/assets/svg/LogoWithText.svg?react"
 import WalletBar from "../components/WalletConnect"
 import noNotificationIcon from "/assets/icons/copy.svg"
 interface HeaderProps {
   haveSidebar?: boolean
+  wallet?: boolean
 }
 
-const Header: React.FC<HeaderProps> = ({ haveSidebar = false }) => {
+const Header: React.FC<HeaderProps> = ({ haveSidebar = false, wallet = true }) => {
   const notifications: string[] = [
     "Notification 1",
     "Notification 2",
@@ -30,6 +31,42 @@ const Header: React.FC<HeaderProps> = ({ haveSidebar = false }) => {
         <div
           className={`flex items-center space-x-2 ${haveSidebar ? "" : "ml-auto"}`}
         >
+
+          <ul className="md:flex items-center text-sm hidden">
+          <li
+              className={[
+                "w-24 text-center bg-transparent py-2 rounded-full cursor-pointer",
+              ].join(" ")}
+            >
+              <Link
+                to="/staking"
+                className={
+                  location.pathname === "/market"
+                    ? "text-white"
+                    : "text-white/50"
+                }
+              >
+                Staking
+              </Link>
+            </li>
+            <li
+              className={[
+                "w-24 text-center bg-transparent py-2 rounded-full cursor-pointer",
+              ].join(" ")}
+            >
+              <Link
+                to="/market"
+                className={
+                  location.pathname === "/market"
+                    ? "text-white"
+                    : "text-white/50"
+                }
+              >
+                Market
+              </Link>
+            </li>
+            
+          </ul>
           <details className="dropdown dropdown-left dropdown-bottom hidden text-white">
             <summary className="btn m-1 flex items-center space-x-2 border-none">
               <div className="relative inline-flex items-center">
@@ -72,7 +109,10 @@ const Header: React.FC<HeaderProps> = ({ haveSidebar = false }) => {
               )}
             </div>
           </details>
-          <WalletBar className="rounded-full" />
+          {
+            wallet && <WalletBar className="rounded-full" />
+          }
+
         </div>
       </div>
     </header>
