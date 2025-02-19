@@ -22,8 +22,6 @@ import Test from "./pages/Test/Index"
 import Account from "./pages/Account/Index"
 import SendToken from "./pages/transactions/SendToken.tsx"
 import { useContext } from "react"
-import { Staking } from "./pages/Babylon/index.tsx"
-import { ErrorProvider } from "./context/Error/ErrorContext";
 import Market from "./pages/Market/Index.tsx"
 import MarketDetail from "./pages/Market/Detail/Index.tsx"
 import {
@@ -66,7 +64,6 @@ function App() {
             <Route path="/staking" element={
               <div>
                 <Header haveSidebar={true} />
-                <ErrorProvider><Staking /></ErrorProvider>
               </div>
             } />
             <Route path="/market" element={
