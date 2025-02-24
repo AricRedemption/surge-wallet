@@ -3,11 +3,13 @@ import Vline from "@/assets/svg/vline.svg?react"
 import useMultiWalletStore from "@/stores/useMultiWalletStore"
 import { TaprootMultisigWallet, Psbt, networks } from "@metalet/utxo-wallet-sdk"
 import { unisatApi } from "@/utils/request"
-import { getOrder, overTx } from "@/queries/tx"
+import { getOrder, overTx, updateTx } from "@/queries/tx"
 import { useNavigate, useParams } from "react-router-dom"
+import useWalletStore from "@/stores/useWalletStore"
 
 export default function SendToken() {
   const navigate = useNavigate()
+  const { publicKey } = useWalletStore()
   const { publicKeys, num } = useMultiWalletStore()
   console.log(publicKeys, num)
   if (publicKeys.length === 0) {
@@ -15,20 +17,23 @@ export default function SendToken() {
   }
 
   const { orderId } = useParams()
-  const [psbtHex, setPsbtHex] = useState()
+  const [psbtHex, setPsbtHex] = useState<string>()
   const [txid, setTxid] = useState("")
   const [objectId, setObjectId] = useState("")
 
   useEffect(() => {
     if (orderId) {
-      getOrder(orderId).then((order: any) => {
-        setPsbtHex(order[0].cp)
-        setObjectId(order[0].objectId)
-      })
+      const order = getOrder(orderId)
+      if (order.length > 0) {
+        setPsbtHex(order[0].currentPsbt)
+        setObjectId(order[0].id)
+      } else {
+        navigate("/404")
+      }
     }
-  }, [orderId])
+  }, [navigate, orderId])
 
-  const createTx = async () => {
+  const signTx = async () => {
     if (publicKeys.length === 0) {
       return
     }
@@ -51,21 +56,28 @@ export default function SendToken() {
     })
 
     psbt = Psbt.fromHex(_psbtHex!, { network: networks.testnet })
-
     wallet.addDummySigs(psbt)
 
-    console.log("wallet.address", wallet.address)
-    console.log("wallet.addDummySigs(_psbt)", wallet.address)
+    // Update transaction with new signature
 
-    psbt.finalizeAllInputs()
-    const rawTx = psbt.extractTransaction().toHex()
+    const order = getOrder(orderId!)[0]
+    // Only broadcast if we have enough signatures
+    if (order.pubKeys.length + 1 >= Number(order.needToSign)) {
+      psbt.finalizeAllInputs()
+      const rawTx = psbt.extractTransaction().toHex()
 
-    const txid = await unisatApi<string>("/tx/broadcast", "testnet").post({
-      rawtx: rawTx,
-    })
+      const txid = await unisatApi<string>("/tx/broadcast", "testnet").post({
+        rawtx: rawTx,
+      })
 
-    setTxid(txid)
-    overTx(objectId,txid)
+      setTxid(txid)
+      overTx(orderId!, txid)
+
+      window.open(`https://mempool.space/zh/testnet/tx/${txid}`, "_blank")
+    } else {
+      updateTx(orderId!, _psbtHex, publicKey)
+      navigate(-1)
+    }
   }
 
   return (
@@ -101,7 +113,7 @@ export default function SendToken() {
                 </div>
               </div>
               <button
-                onClick={() => createTx()}
+                onClick={() => signTx()}
                 className="mx-auto mt-8 rounded-3xl bg-[#12FF80] px-4 py-1.5 text-black md:px-8 md:py-3"
               >
                 Sign

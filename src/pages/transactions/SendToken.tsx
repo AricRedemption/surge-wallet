@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom"
 import useWalletStore from "@/stores/useWalletStore"
 import { useToast } from "@/components/Toast"
 
+
 export default function SendToken() {
   const { publicKey } = useWalletStore()
   const navigate = useNavigate()
@@ -17,19 +18,33 @@ export default function SendToken() {
   const [step, setStep] = useState(0)
   const [address, setAddress] = useState("")
   const [amount, setAmount] = useState<number>()
-  const { address: multiAddress, publicKeys, num } = useMultiWalletStore()
+  const {
+    address: multiAddress,
+    publicKeys,
+    num: needToSign,
+  } = useMultiWalletStore()
 
   const createTx = async () => {
+    if (!amount) {
+      toast.warn("Please enter amount")
+      return
+    }
+    console.log("publicKeys", publicKeys)
+
+    const amountInSatoshis = amount * 10 ** 8
+    console.log("amountInSatoshis", amountInSatoshis)
     setStep(1)
     const psbt = new Psbt({ network: networks.testnet })
     const wallet = new TaprootMultisigWallet(
       publicKeys.map((pubkey) => Buffer.from(pubkey, "hex").subarray(1)),
-      num,
+      needToSign,
     )
 
     const utxos = await unisatApi<UTXO[]>("/address/btc-utxo", "testnet").get({
       address: multiAddress,
     })
+
+    console.log("utxos", utxos)
 
     if (!utxos.length) {
       toast.warn("Insufficient balance")
@@ -38,9 +53,17 @@ export default function SendToken() {
     for (let i = 0; i < utxos.length; i++) {
       wallet.addInput(psbt, utxos[i].txid, utxos[i].vout, utxos[i].satoshis)
     }
+    const fee = 3000
     psbt.addOutput({
       value:
-        utxos.reduce((total, cur) => total + Number(cur.satoshis), 0) - 1000,
+        utxos.reduce((total, cur) => total + Number(cur.satoshis), 0) -
+        fee -
+        amountInSatoshis,
+      address: multiAddress,
+    })
+
+    psbt.addOutput({
+      value: amountInSatoshis,
       address: address,
     })
 
@@ -55,7 +78,7 @@ export default function SendToken() {
       })),
     })
 
-    await addTx(multiAddress, psbtHex, [publicKey])
+    await addTx(multiAddress, psbtHex, [publicKey], needToSign.toString())
     navigate("/account/" + multiAddress)
   }
 

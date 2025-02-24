@@ -1,15 +1,20 @@
 import noteIcon from "/assets/icons/note.svg"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import Logo from "@/assets/svg/Logo.svg?react"
 import LogoWithText from "@/assets/svg/LogoWithText.svg?react"
 import WalletBar from "../components/WalletConnect"
 import noNotificationIcon from "/assets/icons/copy.svg"
+import { NavLink } from "react-router-dom"
+
 interface HeaderProps {
   haveSidebar?: boolean
   wallet?: boolean
 }
 
-const Header: React.FC<HeaderProps> = ({ haveSidebar = false, wallet = true }) => {
+const Header: React.FC<HeaderProps> = ({
+  haveSidebar = false,
+  wallet = true,
+}) => {
   const notifications: string[] = [
     "Notification 1",
     "Notification 2",
@@ -31,43 +36,25 @@ const Header: React.FC<HeaderProps> = ({ haveSidebar = false, wallet = true }) =
         <div
           className={`flex items-center space-x-2 ${haveSidebar ? "" : "ml-auto"}`}
         >
-
-          <ul className="md:flex items-center text-sm hidden">
-          <li
-              className={[
-                "w-24 text-center bg-transparent py-2 rounded-full cursor-pointer",
-              ].join(" ")}
+          <nav className="hidden items-center gap-x-8 md:flex mr-4">
+            <NavLink
+              to="/accounts"
+              className={({ isActive }) =>
+                isActive ? "text-[#12FF80]" : "text-white"
+              }
             >
-              <Link
-                to="/staking"
-                className={
-                  location.pathname === "/market"
-                    ? "text-white"
-                    : "text-white/50"
-                }
-              >
-                Staking
-              </Link>
-            </li>
-            <li
-              className={[
-                "w-24 text-center bg-transparent py-2 rounded-full cursor-pointer",
-              ].join(" ")}
+              Accounts
+            </NavLink>
+            <NavLink
+              to="/transactions"
+              className={({ isActive }) =>
+                isActive ? "text-[#12FF80]" : "text-white"
+              }
             >
-              <Link
-                to="/market"
-                className={
-                  location.pathname === "/market"
-                    ? "text-white"
-                    : "text-white/50"
-                }
-              >
-                Market
-              </Link>
-            </li>
-            
-          </ul>
-          <details className="dropdown dropdown-left dropdown-bottom hidden text-white">
+              Transactions
+            </NavLink>
+          </nav>
+          <details className="dropdown dropdown-left dropdown-bottom hidden text-white ml-4">
             <summary className="btn m-1 flex items-center space-x-2 border-none">
               <div className="relative inline-flex items-center">
                 <img className="h-5 w-5" src={noteIcon} alt="Notifications" />
@@ -109,10 +96,7 @@ const Header: React.FC<HeaderProps> = ({ haveSidebar = false, wallet = true }) =
               )}
             </div>
           </details>
-          {
-            wallet && <WalletBar className="rounded-full" />
-          }
-
+          {wallet && <WalletBar className="rounded-full" />}
         </div>
       </div>
     </header>

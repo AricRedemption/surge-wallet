@@ -6,22 +6,37 @@ import { getAccountList } from "@/queries/account"
 import useWalletStore from "@/stores/useWalletStore"
 import BitcoinIcon from "@/assets/svg/bitcoin.svg?react"
 import useMultiWalletStore from "@/stores/useMultiWalletStore"
+import { FiCopy } from "react-icons/fi"
+import { unisatApi } from "@/utils/request"
+import { UTXO } from "@/types/utxo"
+import { Account } from "@/queries/account"
 
-export default function Account() {
+export default function AccountComponent() {
   const navigate = useNavigate()
 
   const { publicKey } = useWalletStore()
   const [loading, setLoading] = useState(true)
-  const [accounts, setAccounts] = useState([])
+  const [accounts, setAccounts] = useState<Account[]>([])
   const { setAddress, setPublicKeys, setNum } = useMultiWalletStore()
+  const [balances, setBalances] = useState<{[key: string]: number}>({})
 
   useEffect(() => {
     if (publicKey) {
-      getAccountList(publicKey).then((accounts: any) => {
-        console.log("accounts", accounts)
-        setAccounts(accounts)
-        setLoading(false)
+      const accounts = getAccountList(publicKey);
+      setAccounts(accounts);
+
+      console.log("accounts", accounts)
+      
+      // Fetch balances for each account
+      accounts.forEach(async (account) => {
+        const utxos = await unisatApi<UTXO[]>("/address/btc-utxo", "testnet").get({
+          address: account.multiAddress,
+        })
+        const balance = utxos.reduce((total, utxo) => total + Number(utxo.satoshis), 0) / 10**8
+        setBalances(prev => ({...prev, [account.multiAddress]: balance}))
       })
+      
+      setLoading(false);
     }
   }, [publicKey])
   return (
@@ -44,27 +59,39 @@ export default function Account() {
           <h6 className="my-2 px-2 text-sm md:px-6 md:text-base">
             My Accounts ({accounts.length})
           </h6>
-          {accounts.map((account: any, index: number) => (
+          {accounts.map((account: Account, index: number) => (
             <div
               key={index}
               className="flex w-full cursor-pointer items-center justify-between rounded-3xl px-2 hover:bg-black/50 md:px-6"
               onClick={() => {
                 setNum(account.num)
-                setAddress(account.md)
-                setPublicKeys(account.pubs)
-                navigate("/account/" + account.md)
+                setAddress(account.multiAddress)
+                setPublicKeys(account.pubKeys)
+                navigate("/account/" + account.multiAddress)
               }}
             >
               <div className="flex items-center gap-4 py-3 md:py-6">
                 <div className="size-8 rounded-full bg-white md:size-12"></div>
                 <div className="text-xs md:text-sm">
                   <div>{account.name}</div>
-                  <div>{truncateStr(account.md, 6)}</div>
+                  <div className="flex items-center gap-1">
+                    {truncateStr(account.multiAddress, 6)}
+                    <button
+                      className="rounded bg-gray-700 p-1 hover:bg-gray-600"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigator.clipboard.writeText(account.multiAddress)
+                      }}
+                      aria-label="Copy address"
+                    >
+                      <FiCopy className="h-3 w-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="hidden items-center gap-x-4 md:flex">
                 <BitcoinIcon className="scale-150" />
-                <span className="text-lg">Bitcoin</span>
+                <span className="text-lg">{balances[account.multiAddress]?.toFixed(8) || '0.00000000'} BTC</span>
               </div>
             </div>
           ))}

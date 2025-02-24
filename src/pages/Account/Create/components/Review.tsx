@@ -128,9 +128,10 @@ export default function Review({
             </button>
             <button
               onClick={async () => {
-                const count = await findAccount(multiAddress)
+                const hasAccount = await findAccount(multiAddress)
+                console.log("hasAccount", hasAccount)
                 setLoading(true)
-                if (count === 0) {
+                if (!hasAccount) {
                   await addAccount(multiAddress, name, publicKeys, signerNum)
                   setLoading(false)
                   toast.success("Create Multisig address successfully!")

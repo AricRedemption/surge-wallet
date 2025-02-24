@@ -1,59 +1,51 @@
-import Bomb from "@/config/Bomb";
+// 新增本地存储键名常量
+const ACCOUNTS_KEY = 'surge-accounts';
 
-export const getAccounts = () => {
-  const query = Bomb.Query("accounts");
-  query.find().then((res) => {
-    console.log(res);
-  });
+export interface Account {
+  id: string
+  multiAddress: string // multi-sig address
+  name: string
+  num: number // number of required signatures
+  pubKeys: string[] // public keys
+  timestamp: string
+}
+
+export const getAccounts = (): Account[] => {
+  // 从localStorage获取数据
+  const data = localStorage.getItem(ACCOUNTS_KEY);
+  return data ? JSON.parse(data) : [];
 };
 
 export const addAccount = async (
   multiAddress: string,
   name: string,
-  pubkeys: Array<string>,
+  pubKeys: string[],
   num: number,
-) => {
-  const query = Bomb.Query("accounts");
-  query.set("md", multiAddress);
-  query.set("num", num as any);
-  query.set("name", name);
-  query.add("pubs", pubkeys);
-  query
-    .save()
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+): Promise<Account> => {
+  const accounts = getAccounts();
+  const newAccount: Account = {
+    id: Date.now().toString(), // 生成唯一ID
+    multiAddress,
+    num,
+    name,
+    pubKeys,
+    timestamp: Date.now().toString()
+  };
+  accounts.push(newAccount);
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  return newAccount;
 };
 
-export const findAccount = async (multiAddress: string) => {
-  const query = Bomb.Query("accounts");
-  query.equalTo("md", "==", multiAddress);
-  return new Promise((resolve, reject) => {
-    query
-      .count()
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+export const findAccount = async (multiAddress: string): Promise<boolean> => {
+  console.log("multiAddress", multiAddress)
+  const accounts = getAccounts();
+  console.log("accounts", accounts);
+  return accounts.some((acc) => acc.multiAddress === multiAddress);
 };
 
-export const getAccountList = async (pubKey: string) => {
-  const query = Bomb.Query("accounts");
-  query.containedIn("pubs", [pubKey]);
-  return new Promise((resolve, reject) => {
-    query
-      .find()
-      .then((res: any) => {
-        resolve(res);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+export const getAccountList = (pubKey: string): Account[] => {
+  const accounts = getAccounts();
+  return accounts.filter((acc) => 
+    acc.pubKeys?.includes(pubKey)
+  );
 };

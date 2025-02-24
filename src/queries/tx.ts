@@ -1,4 +1,15 @@
-import Bomb from "@/config/Bomb"
+const TXS_KEY = "surge-transactions"
+
+export interface Tx {
+  id: string
+  multiAddress: string
+  lastPsbt: string
+  currentPsbt: string
+  pubKeys: Array<string>
+  timestamp: string
+  txId: string
+  needToSign: string
+}
 
 export const generateRandomString = (length: number = 32) => {
   let randomString = ""
@@ -14,69 +25,70 @@ export const generateRandomString = (length: number = 32) => {
   return randomString
 }
 
-export const getOrder = async (orderId: string) => {
-  const query = Bomb.Query("pb")
-  query.equalTo("orderid", "==", orderId)
-  return new Promise((resolve, reject) => {
-    query
-      .find()
-      .then((res: any) => {
-        resolve(res)
-      })
-      .catch((err: any) => {
-        reject(err)
-      })
-  })
+const getTransactions = (): Tx[] => {
+  const data = localStorage.getItem(TXS_KEY)
+  return data ? JSON.parse(data) : []
 }
 
-export const getTxList = async (multiAddress: string) => {
-  const query = Bomb.Query("pb")
-  query.equalTo("md", "==", multiAddress)
-  return new Promise((resolve, reject) => {
-    query
-      .find()
-      .then((res: any) => {
-        resolve(res)
-      })
-      .catch((err) => {
-        reject(err)
-      })
-  })
+export const getOrder = (id: string) => {
+  const txs = getTransactions()
+  const order = txs.filter((tx) => tx.id === id)
+  return order
 }
 
-export const addTx = async (
+export const getTxList = (multiAddress: string) => {
+  const txs = getTransactions()
+  return txs.filter((tx) => tx.multiAddress === multiAddress)
+}
+
+export const addTx = (
   multiAddress: string,
   psbtHex: string,
-  pubkeys: Array<string>,
+  pubKeys: Array<string>,
+  needToSign: string,
 ) => {
-  const query = Bomb.Query("pb")
-  query.set("orderid", generateRandomString(8))
-  query.set("md", multiAddress)
-  query.set("if", "0")
-  query.set("lp", psbtHex)
-  query.set("cp", psbtHex)
-  query.add("pubs", pubkeys)
-  query
-    .save()
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  const txs = getTransactions()
+  const newTx = {
+    id: generateRandomString(16),
+    multiAddress,
+    lastPsbt: psbtHex,
+    currentPsbt: psbtHex,
+    pubKeys,
+    timestamp: Date.now().toString(),
+    txId: "",
+    needToSign,
+  }
+  txs.push(newTx)
+  localStorage.setItem(TXS_KEY, JSON.stringify(txs))
+  return newTx
 }
 
-export const overTx = async (objectId: string, txid: string) => {
-  const query = Bomb.Query("pb")
-  query.set("id", objectId)
-  query.set("if", "1")
-  query.set("lp", txid)
-  query
-    .save()
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+export const updateTx = (id: string, psbtHex: string, pubKey: string) => {
+  const txs = getTransactions()
+  const updated = txs.map((tx) => {
+    if (tx.id === id) {
+      return {
+        ...tx,
+        currentPsbt: psbtHex,
+        lastPsbt: tx.currentPsbt,
+        pubKeys: [...tx.pubKeys, pubKey],
+      }
+    }
+    return tx
+  })
+  localStorage.setItem(TXS_KEY, JSON.stringify(updated))
+}
+
+export const overTx = (objectId: string, txid: string) => {
+  const txs = getTransactions()
+  const updated = txs.map((tx) => {
+    if (tx.id === objectId) {
+      return {
+        ...tx,
+        txId: txid,
+      }
+    }
+    return tx
+  })
+  localStorage.setItem(TXS_KEY, JSON.stringify(updated))
 }

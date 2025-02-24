@@ -75,7 +75,7 @@ function ConnectWallet({ className }: Props) {
       setStep(2) // 设置步骤为 2，表示连接完成
       // 停留1秒后关闭弹窗
       setTimeout(() => {
-        ;(document.getElementById("my_modal_3") as HTMLDialogElement)?.close()
+        (document.getElementById("my_modal_3") as HTMLDialogElement)?.close()
         setStep(0) // 重置步骤
       }, 1000)
     } catch (error) {
