@@ -82,7 +82,7 @@ export default function Account() {
 
                       {tx.txId ? (
                         <a
-                          href={tx.txId}
+                          href={`https://mempool.space/zh/testnet/tx/${tx.txId}`}
                           target="_blank"
                           className="mt-1 text-xs underline"
                         >
